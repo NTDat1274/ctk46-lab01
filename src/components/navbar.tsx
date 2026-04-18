@@ -76,6 +76,12 @@ export default function Navbar() {
               Dự án
             </Link>
             <Link
+              href="/guestbook"
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              Lưu bút
+            </Link>
+            <Link
               href="/contact"
               className="text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors"
               onClick={() => setIsOpen(false)}
