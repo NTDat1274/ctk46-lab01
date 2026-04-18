@@ -13,9 +13,12 @@ export default function SkillsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-6">Kỹ năng Lập trình</h1>
-      <ul className="grid grid-cols-2 gap-4 list-disc list-inside text-gray-700">
+      <ul className="grid grid-cols-2 gap-4 list-disc list-inside text-gray-700 dark:text-gray-300">
         {skills.map((skill, index) => (
-          <li key={index} className="bg-gray-50 p-3 rounded-lg border">
+          <li
+            key={index}
+            className="bg-gray-50 dark:bg-gray-900/60 p-3 rounded-lg border dark:border-gray-700"
+          >
             {skill}
           </li>
         ))}

@@ -6,7 +6,7 @@ export default function NotFound() {
       {/* Animation minh họa: Icon nảy lên xuống */}
       <div className="animate-bounce mb-8">
         <svg
-          className="w-32 h-32 text-blue-500"
+          className="w-32 h-32 text-blue-500 dark:text-blue-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -21,13 +21,13 @@ export default function NotFound() {
         </svg>
       </div>
 
-      <h1 className="text-8xl font-extrabold text-gray-200 tracking-widest mb-2">
+      <h1 className="text-8xl font-extrabold text-gray-200 dark:text-gray-700 tracking-widest mb-2">
         404
       </h1>
-      <h2 className="text-3xl font-bold text-gray-800 mb-4">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
         Lạc đường rồi bạn ơi!
       </h2>
-      <p className="text-gray-500 mb-8 max-w-md">
+      <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md">
         Trang bạn đang tìm kiếm dường như không tồn tại hoặc đã bị gỡ bỏ khỏi
         Portfolio của mình.
       </p>
