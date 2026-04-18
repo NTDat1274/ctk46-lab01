@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Counter from "@/components/counter";
 
 export default function HomePage() {
   return (
@@ -32,6 +33,13 @@ export default function HomePage() {
             Liên hệ
           </Link>
         </div>
+      </div>
+
+      <div className="mt-16 flex flex-col items-center border-t dark:border-gray-800 pt-8">
+        <h2 className="text-2xl font-bold mb-6">
+          Thử nghiệm Client Component (Counter)
+        </h2>
+        <Counter />
       </div>
     </div>
   );
