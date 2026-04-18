@@ -1,37 +1,46 @@
 import Link from "next/link";
-import { posts } from "@/data/posts";
+import { Post } from "@/types/post";
 
-export default function BlogPage() {
+async function getPosts(): Promise<Post[]> {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    next: { revalidate: 60 },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách bài viết");
+  }
+  return res.json();
+}
+
+export default async function BlogPage() {
+  const posts = await getPosts();
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-6">Blog</h1>
+    <div>
+      <h1 className="text-3xl font-bold mb-2">Blog</h1>
+      <p className="text-gray-500 mb-6">
+        Tổng cộng {posts.length} bài viết từ API
+      </p>
       <div className="space-y-6">
-        {posts.map((post) => (
+        {posts.slice(0, 10).map((post) => (
           <article
-            key={post.slug}
-            className="border dark:border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow bg-white dark:bg-gray-900"
+            key={post.id}
+            className="border rounded-lg p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center gap-3 mb-2">
-              <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">
-                {post.category}
+              <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+                Tác giả #{post.userId}
               </span>
-              <span className="text-sm text-gray-400 dark:text-gray-500">
-                {post.date}
-              </span>
+              <span className="text-sm text-gray-400">Bài #{post.id}</span>
             </div>
-            <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <Link href={`/blog/${post.id}`}>
+              <h2 className="text-xl font-semibold mb-2 hover:text-blue-600 transition-colors capitalize">
                 {post.title}
               </h2>
             </Link>
-            {/* Hiển thị tác giả (author) */}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 font-medium">
-              Bởi: {post.author}
-            </p>
-            <p className="text-gray-600 dark:text-gray-300">{post.excerpt}</p>
+            <p className="text-gray-600 line-clamp-2">{post.body}</p>
             <Link
-              href={`/blog/${post.slug}`}
-              className="inline-block mt-3 text-blue-600 dark:text-blue-400 text-sm hover:underline font-medium"
+              href={`/blog/${post.id}`}
+              className="inline-block mt-3 text-blue-600 text-sm hover:underline"
             >
               Đọc thêm →
             </Link>
