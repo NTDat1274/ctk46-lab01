@@ -24,7 +24,7 @@ export default function ContactPage() {
         Bạn có câu hỏi hoặc muốn hợp tác? Hãy gửi tin nhắn cho tôi!
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Phần 5.6: Chuẩn hóa giao diện Contact bằng các component shadcn/ui. */}
+        {/* Yêu cầu 3: Trang Contact dùng Input/Textarea/Button/Label từ shadcn/ui. */}
         <div className="space-y-4">
           <Card>
             <CardHeader>

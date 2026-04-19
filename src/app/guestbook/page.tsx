@@ -9,6 +9,7 @@ import DeleteButton from "@/components/delete-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Fetcher cơ bản cho SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -63,7 +64,15 @@ export default function GuestbookPage() {
             <Card key={entry.id}>
               <CardHeader className="pb-0">
                 <div className="flex items-center justify-between gap-3">
-                  <CardTitle className="text-base">{entry.name}</CardTitle>
+                  {/* Yêu cầu 2: Avatar cho từng entry guestbook (chữ cái đầu tên). */}
+                  <div className="flex items-center gap-2">
+                    <Avatar size="sm">
+                      <AvatarFallback>
+                        {(entry.name.trim().charAt(0) || "?").toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <CardTitle className="text-base">{entry.name}</CardTitle>
+                  </div>
                   <div className="flex items-center gap-3">
                     <Badge variant="outline">
                       {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
