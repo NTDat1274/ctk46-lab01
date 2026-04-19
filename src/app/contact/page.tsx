@@ -1,14 +1,17 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { sendContactMessage, ContactFormState } from "./actions";
+import SubmitButton from "@/components/submit-button";
+
 const initialState: ContactFormState = {
   success: false,
 };
+
 export default function ContactPage() {
-  const [state, formAction, isPending] = useActionState(
-    sendContactMessage,
-    initialState,
-  );
+  const [state, formAction] = useActionState(sendContactMessage, initialState);
+  const [dismissSuccess, setDismissSuccess] = useState(false);
+  const showSuccess = state.success && !dismissSuccess;
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-2">Liên hệ</h1>
@@ -47,7 +50,7 @@ export default function ContactPage() {
         </div>
         {/* Form liên hệ */}
         <div className="md:col-span-2">
-          {state.success ? (
+          {showSuccess ? (
             <div
               className="bg-green-50 border border-green-200 rounded-lg p-6
 text-center"
@@ -58,9 +61,21 @@ text-center"
               <p className="text-green-600">
                 Cảm ơn bạn đã liên hệ. Tôi sẽ phản hồi sớm nhất có thể.
               </p>
+              {/* Yêu cầu 1: Nút quay lại form để gửi thêm tin nhắn mới. */}
+              <button
+                type="button"
+                onClick={() => setDismissSuccess(true)}
+                className="mt-4 inline-flex items-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-green-700 border border-green-300 hover:bg-green-100 transition-colors"
+              >
+                Gửi tin nhắn khác
+              </button>
             </div>
           ) : (
-            <form action={formAction} className="space-y-4">
+            <form
+              action={formAction}
+              onSubmit={() => setDismissSuccess(false)}
+              className="space-y-4"
+            >
               <div>
                 <label
                   htmlFor="name"
@@ -149,14 +164,12 @@ focus:ring-2 focus:ring-blue-500 resize-none"
                   </p>
                 )}
               </div>
-              <button
-                type="submit"
-                disabled={isPending}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg
-hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-notallowed"
-              >
-                {isPending ? "Đang gửi..." : "Gửi tin nhắn"}
-              </button>
+              {/* Yêu cầu 3: Dùng component submit tái sử dụng với useFormStatus. */}
+              <SubmitButton
+                idleText="Gửi tin nhắn"
+                pendingText="Đang gửi..."
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              />
             </form>
           )}
         </div>

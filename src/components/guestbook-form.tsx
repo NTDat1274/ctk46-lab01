@@ -1,23 +1,19 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { useRef, useState } from "react";
 import { useSWRConfig } from "swr";
+import SubmitButton from "@/components/submit-button";
 
 export default function GuestbookForm() {
   const { mutate } = useSWRConfig();
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
-  const [isPending, setIsPending] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const trimmedName = name.trim();
-    const trimmedMessage = message.trim();
+  async function submitGuestbook(formData: FormData) {
+    const trimmedName = String(formData.get("name") ?? "").trim();
+    const trimmedMessage = String(formData.get("message") ?? "").trim();
     if (!trimmedName || !trimmedMessage) return;
 
-    setIsPending(true);
     setError(null);
     setSuccess(false);
 
@@ -35,22 +31,20 @@ export default function GuestbookForm() {
         throw new Error(body?.error || "Không thể gửi lời nhắn");
       }
 
-      setName("");
-      setMessage("");
+      formRef.current?.reset();
       setSuccess(true);
       await mutate("/api/guestbook");
     } catch (err) {
       const messageText =
         err instanceof Error ? err.message : "Không thể gửi lời nhắn";
       setError(messageText);
-    } finally {
-      setIsPending(false);
     }
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      ref={formRef}
+      action={submitGuestbook}
       className="bg-gray-50 rounded-lg p-6 mb-8 space-y-4"
     >
       <div>
@@ -64,8 +58,6 @@ export default function GuestbookForm() {
           id="name"
           name="name"
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
           placeholder="Nhập tên của bạn"
           required
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -81,21 +73,18 @@ export default function GuestbookForm() {
         <textarea
           id="message"
           name="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
           placeholder="Viết lời nhắn của bạn..."
           required
           rows={3}
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
-      <button
-        type="submit"
-        disabled={isPending || !name.trim() || !message.trim()}
+      {/* Yêu cầu 3: Dùng component submit tái sử dụng với useFormStatus. */}
+      <SubmitButton
+        idleText="Gửi lời nhắn"
+        pendingText="Đang gửi..."
         className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isPending ? "Đang gửi..." : "Gửi lời nhắn"}
-      </button>
+      />
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {success && (
         <p className="text-green-600 text-sm">Gửi lời nhắn thành công!</p>
