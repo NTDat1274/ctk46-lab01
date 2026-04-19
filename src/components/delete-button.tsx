@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
+import { Button } from "@/components/ui/button";
 
 export default function DeleteButton({ id }: { id: string }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -27,12 +28,13 @@ export default function DeleteButton({ id }: { id: string }) {
   }
 
   return (
-    <button
+    <Button
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-xs text-red-400 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      variant="destructive"
+      size="xs"
     >
       {isDeleting ? "Đang xóa..." : "Xóa"}
-    </button>
+    </Button>
   );
 }

@@ -2,6 +2,10 @@
 import { useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import SubmitButton from "@/components/submit-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export default function GuestbookForm() {
   const { mutate } = useSWRConfig();
@@ -42,53 +46,40 @@ export default function GuestbookForm() {
   }
 
   return (
-    <form
-      ref={formRef}
-      action={submitGuestbook}
-      className="bg-gray-50 rounded-lg p-6 mb-8 space-y-4"
-    >
-      <div>
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Tên của bạn
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="Nhập tên của bạn"
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="message"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Lời nhắn
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          placeholder="Viết lời nhắn của bạn..."
-          required
-          rows={3}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-        />
-      </div>
-      {/* Yêu cầu 3: Dùng component submit tái sử dụng với useFormStatus. */}
-      <SubmitButton
-        idleText="Gửi lời nhắn"
-        pendingText="Đang gửi..."
-        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      />
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {success && (
-        <p className="text-green-600 text-sm">Gửi lời nhắn thành công!</p>
-      )}
+    <form ref={formRef} action={submitGuestbook} className="mb-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Để lại lời nhắn</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Tên của bạn</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Nhập tên của bạn"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="message">Lời nhắn</Label>
+            <Textarea
+              id="message"
+              name="message"
+              placeholder="Viết lời nhắn của bạn..."
+              required
+              rows={3}
+            />
+          </div>
+          {/* Phần 5.8: Dùng component submit tái sử dụng với useFormStatus. */}
+          <SubmitButton idleText="Gửi lời nhắn" pendingText="Đang gửi..." />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && (
+            <p className="text-green-600 text-sm">Gửi lời nhắn thành công!</p>
+          )}
+        </CardContent>
+      </Card>
     </form>
   );
 }

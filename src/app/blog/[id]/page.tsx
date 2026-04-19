@@ -2,6 +2,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Post, User, Comment } from "@/types/post";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface BlogPostPageProps {
   params: Promise<{ id: string }>;
@@ -44,53 +54,57 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      <Link
-        href="/blog"
-        className="text-blue-600 hover:underline text-sm mb-6 inline-block"
-      >
-        ← Quay lại danh sách
-      </Link>
+      <Button asChild variant="link" className="mb-6 px-0">
+        <Link href="/blog">← Quay lại danh sách</Link>
+      </Button>
 
-      <article>
-        <h1 className="text-3xl font-bold mb-4 capitalize">{post.title}</h1>
-        <div className="flex items-center gap-3 mb-6 text-sm text-gray-500">
-          <span>
-            Tác giả: <strong className="text-gray-700">{author.name}</strong>
-          </span>
-          <span>•</span>
-          <span>{author.email}</span>
-        </div>
+      <article className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-3xl capitalize">{post.title}</CardTitle>
+            <CardDescription className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">Tác giả: {author.name}</Badge>
+              <Badge variant="secondary">{author.email}</Badge>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="prose max-w-none whitespace-pre-line leading-relaxed text-foreground">
+              {post.body}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="prose max-w-none text-gray-700 whitespace-pre-line mb-8 leading-relaxed">
-          {post.body}
-        </div>
-
-        <div className="border-t pt-6 mb-8">
-          <h3 className="font-semibold mb-2">Về tác giả</h3>
-          <p className="text-gray-600 text-sm">
-            <strong>{author.name}</strong> (@{author.username}) -{" "}
-            {author.company.name}
-          </p>
-          <p className="text-gray-500 text-sm">{author.company.catchPhrase}</p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Về tác giả</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">{author.name}</strong> (@
+              {author.username}) - {author.company.name}
+            </p>
+            <p>{author.company.catchPhrase}</p>
+          </CardContent>
+        </Card>
 
         {/* Bài tập tự làm: Hiển thị danh sách comments */}
-        <div className="border-t pt-6">
-          <h3 className="font-semibold text-lg mb-4">
-            Bình luận ({comments.length})
-          </h3>
-          <div className="space-y-4">
-            {comments.map((comment) => (
-              <div key={comment.id} className="bg-gray-50 p-4 rounded-lg">
-                <p className="font-semibold text-sm text-gray-800">
+        <Card>
+          <CardHeader>
+            <CardTitle>Bình luận ({comments.length})</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {comments.map((comment, index) => (
+              <div key={comment.id} className="space-y-2">
+                <p className="text-sm font-semibold text-foreground">
                   {comment.name}
                 </p>
-                <p className="text-xs text-gray-500 mb-2">{comment.email}</p>
-                <p className="text-sm text-gray-600">{comment.body}</p>
+                <p className="text-xs text-muted-foreground">{comment.email}</p>
+                <p className="text-sm text-muted-foreground">{comment.body}</p>
+                {index < comments.length - 1 && <Separator />}
               </div>
             ))}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </article>
     </div>
   );

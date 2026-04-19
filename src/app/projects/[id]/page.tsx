@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectById, projects } from "@/data/projects";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface ProjectDetailPageProps {
   params: Promise<{ id: string }>;
@@ -16,28 +20,28 @@ export default async function ProjectDetailPage({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <Link
-        href="/projects"
-        className="text-blue-600 dark:text-blue-400 hover:underline text-sm mb-6 inline-block"
-      >
-        ← Quay lại danh sách Dự án
-      </Link>
-      <div className="bg-white dark:bg-gray-900 p-8 rounded-lg border dark:border-gray-700 shadow-sm">
-        <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
-        <div className="flex gap-2 mb-6 border-b dark:border-gray-700 pb-6">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm px-3 py-1 rounded-md border dark:border-gray-700"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-        <div className="prose max-w-none text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
-          {project.content}
-        </div>
-      </div>
+      <Button asChild variant="link" className="mb-6 px-0">
+        <Link href="/projects">← Quay lại danh sách Dự án</Link>
+      </Button>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">{project.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6 flex flex-wrap gap-2">
+            {project.tech.map((t) => (
+              <Badge key={t} variant="outline">
+                {t}
+              </Badge>
+            ))}
+          </div>
+          <Separator className="mb-6" />
+          <div className="prose max-w-none text-lg leading-relaxed text-foreground whitespace-pre-line">
+            {project.content}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

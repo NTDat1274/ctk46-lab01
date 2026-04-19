@@ -6,6 +6,9 @@ import useSWR from "swr";
 import { GuestbookEntry } from "@/data/guestbook";
 import GuestbookForm from "@/components/guestbook-form";
 import DeleteButton from "@/components/delete-button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 // Fetcher cơ bản cho SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -53,26 +56,27 @@ export default function GuestbookPage() {
 
       {!isLoading && !error && allEntries && (
         <div className="space-y-4">
-          <p className="text-sm text-gray-400">{allEntries.length} lời nhắn</p>
+          {/* Phần 5.7: Dùng Badge + Card + Separator cho danh sách Guestbook. */}
+          <Badge variant="secondary">{allEntries.length} lời nhắn</Badge>
 
           {entries.map((entry) => (
-            <div
-              key={entry.id}
-              className="border rounded-lg p-4 hover:shadow-sm transition-shadow"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-gray-800">
-                  {entry.name}
-                </span>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-gray-400">
-                    {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
-                  </span>
-                  <DeleteButton id={entry.id} />
+            <Card key={entry.id}>
+              <CardHeader className="pb-0">
+                <div className="flex items-center justify-between gap-3">
+                  <CardTitle className="text-base">{entry.name}</CardTitle>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline">
+                      {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
+                    </Badge>
+                    <DeleteButton id={entry.id} />
+                  </div>
                 </div>
-              </div>
-              <p className="text-gray-600">{entry.message}</p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <Separator className="mb-3" />
+                <p className="text-muted-foreground">{entry.message}</p>
+              </CardContent>
+            </Card>
           ))}
 
           {allEntries.length === 0 && (
